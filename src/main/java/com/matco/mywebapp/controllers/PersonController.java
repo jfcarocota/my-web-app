@@ -3,8 +3,13 @@ package com.matco.mywebapp.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLEngineResult.Status;
+
+import com.matco.mywebapp.entities.Authorizator;
 import com.matco.mywebapp.entities.Person;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +25,19 @@ public class PersonController {
     String key = "sofia";
 
     List<Person> persons = new ArrayList<>();
+
+
+    public PersonController(){
+        persons.add(new Person(1,"Jesus", 28));
+        persons.add(new Person(2, "Julio", 34));
+        persons.add(new Person(3, "Javier", 27));
+    }
     
     @GetMapping("/persons")
-    public List<Person> getPersons(){
+    public ResponseEntity<List<Person>> getPersons(@RequestHeader String authorization){
+        if(!Authorizator.authorizeAPI(authorization, Authorizator.API_KEY)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        return persons;
+        return new ResponseEntity<>( persons, HttpStatus.OK);
     } 
 
     @GetMapping("/persons/{id}")

@@ -20,7 +20,6 @@ public class Auth implements IAuth {
     public boolean verifySession(String hash) throws NoSuchAlgorithmException {
         String orginalString = "admin:admin";
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-
         byte[] hashdigest = messageDigest.digest(orginalString.getBytes(StandardCharsets.UTF_8));
         String sha256hex = new String(Hex.encode(hashdigest));
         return hash.endsWith(sha256hex);
